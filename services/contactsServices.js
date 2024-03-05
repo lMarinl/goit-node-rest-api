@@ -4,19 +4,19 @@ import { nanoid } from "nanoid"
 
 const contactsPath = path.resolve("db", "contacts.json")
 
-export async function listContacts() {
+ async function listContacts() {
   const data = await fs.readFile(contactsPath)
   return JSON.parse(data)
 }
 
-export async function getContactById(contactId) {
+ async function getContactById(contactId) {
   const contacts = await listContacts()
   const contact = contacts.find((contact) => contact.id === contactId)
 
   return contact || null
 }
 
-export async function removeContact(contactId) {
+ async function removeContact(contactId) {
   const contacts = await listContacts()
   const index = contacts.findIndex((contact) => contact.id === contactId)
   if (index === -1) {
@@ -28,7 +28,7 @@ export async function removeContact(contactId) {
   return deletedContact
 }
 
-export async function addContact({ name, email, phone }) {
+ async function addContact({ name, email, phone }) {
   const contacts = await listContacts()
   const newContact = {
     id: nanoid(),
@@ -41,7 +41,7 @@ export async function addContact({ name, email, phone }) {
   return newContact
 }
 
-export async function updateContactById(id, data) {
+ async function updateContactById(id, data) {
   const contacts = await listContacts()
   const index = contacts.findIndex((contact) => contact.id === id)
   if (index === -1) {
@@ -50,4 +50,12 @@ export async function updateContactById(id, data) {
   contacts[index] = { ...contacts[index], ...data }
   fs.writeFile(contactsPath, JSON.stringify(contacts, null, 2))
   return contacts[index]
+}
+
+export default {
+  listContacts,
+  getContactById,
+  removeContact,
+  addContact,
+  updateContactById
 }

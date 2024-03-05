@@ -11,4 +11,8 @@ export const updateContactSchema = Joi.object({
   email: Joi.string(),
   phone: Joi.string(),
 })
-// oyJup01xHZVeptDg
+
+export default {
+  createContactSchema,
+  updateContactSchema,
+}

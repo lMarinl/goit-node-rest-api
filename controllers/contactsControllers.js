@@ -1,49 +1,46 @@
-import {
-  listContacts,
-  getContactById,
-  removeContact,
-  addContact,
-  updateContactById,
-} from "../services/contactsServices.js"
+import contactsServices from "../services/contactsServices.js"
 import HttpError from "../helpers/HttpError.js"
-
 import controllersWrapper from "../decorators/controllersWrapper.js"
 
 const getAllContacts = async (_, res) => {
-  const allContacts = await listContacts()
+  const allContacts = await contactsServices.listContacts()
   res.json(allContacts)
 }
 
 const getOneContact = async (req, res) => {
   const { id } = req.params
-  const contactById = await getContactById(id)
+  const contactById = await contactsServices.getContactById(id)
 
   if (!contactById) {
-    throw HttpError(404, `Movie with id=${id} not found`)
+    throw HttpError(404, `Contact with id=${id} not found`)
   }
 
   res.json(contactById)
 }
 
 const createContact = async (req, res) => {
-  const newContact = await addContact(req.body)
+  const newContact = await contactsServices.addContact(req.body)
   res.status(201).json(newContact)
 }
 
 const updateContact = async (req, res) => {
   const { id } = req.params
-  const result = await updateContactById(id, req.body)
+
+  if (!req.body || Object.keys(req.body).length === 0) {
+    throw HttpError(400, "Body must have at least one field")
+  }
+
+  const result = await contactsServices.updateContactById(id, req.body)
 
   if (!result) {
     throw HttpError(404, `Contact with id=${id} not found`)
   }
-
   res.json(result)
 }
 
 const deleteContact = async (req, res) => {
   const { id } = req.params
-  const result = await removeContact(id)
+  const result = await contactsServices.removeContact(id)
 
   if (!result) {
     throw HttpError(404, `Contact with id=${id} not found`)

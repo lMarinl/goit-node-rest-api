@@ -8,9 +8,11 @@ const removeContact = (_id) => Contact.findByIdAndDelete(_id)
 
 const addContact = (data) => Contact.create(data)
 
-const updateContactById = (_id, data) => Contact.findByIdAndUpdate(_id, data)
+const updateContactById = (_id, data) =>
+  Contact.findByIdAndUpdate(_id, data, { new: true })
 
-const updateFavorite = (_id, data) => Contact.findByIdAndUpdate(_id, data)
+const updateFavorite = (_id, data) =>
+  Contact.findByIdAndUpdate(_id, data, { new: true })
 
 export default {
   listContacts,

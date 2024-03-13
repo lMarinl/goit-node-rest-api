@@ -38,6 +38,23 @@ const updateContact = async (req, res) => {
   res.json(result)
 }
 
+const updateStatusContact = async (req, res) => {
+  const { id } = req.params
+  const { favorite } = req.body
+
+  if (!req.body || Object.keys(req.body).length === 0) {
+    throw HttpError(400, "The body must have a field - favorite")
+  }
+
+  const result = await contactsServices.updateFavorite(id, favorite)
+
+  if (!result) {
+    throw HttpError(404, "Not found")
+  }
+
+  res.json(result)
+}
+
 const deleteContact = async (req, res) => {
   const { id } = req.params
   const result = await contactsServices.removeContact(id)
@@ -54,5 +71,6 @@ export default {
   getOneContact: controllersWrapper(getOneContact),
   createContact: controllersWrapper(createContact),
   updateContact: controllersWrapper(updateContact),
+  updateStatusContact: controllersWrapper(updateStatusContact),
   deleteContact: controllersWrapper(deleteContact),
 }

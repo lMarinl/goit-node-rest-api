@@ -1,6 +1,6 @@
 import Contact from "../models/contact.js"
 
-const listContacts = () => Contact.find()
+const listContacts = () => Contact.find({}, { __v: 0 })
 
 const getContactById = (_id) => Contact.findById(_id)
 

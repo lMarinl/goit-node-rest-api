@@ -13,8 +13,11 @@ const findUser = (filter) => User.findOne(filter)
 const validatePassword = (password, hashPassword) =>
   bcrypt.compare(password, hashPassword)
 
+const updateUser = (filter, data) => User.findOneAndUpdate(filter, data)
+
 export default {
   registration,
   findUser,
   validatePassword,
+  updateUser,
 }

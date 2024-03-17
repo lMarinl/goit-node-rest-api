@@ -5,12 +5,6 @@ import services from "../services/authServices.js"
 
 const { SECRET_KEY } = process.env
 
-// const decodeToken = jwt.decode(token)
-
-// try {
-//   const { _id } = jwt.verify(token, SECRET_KEY)
-// } catch (error) {}
-
 const userRegistration = async (req, res) => {
   const { email } = req.body
   const user = await services.findUser({ email })
@@ -48,10 +42,27 @@ const userLogin = async (req, res) => {
 
   const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "2h" })
 
+  await services.updateUser({ _id: id }, { token })
+
   res.json({ token })
+}
+
+const userLogout = async (req, res) => {
+  const { _id } = req.user
+  await services.updateUser({ _id }, { token: null })
+
+  res.status(204).json({ message: "Not authorized" })
+}
+
+const getCurrent = async (req, res) => {
+  const { email, subscription } = req.user
+
+  res.json({ email, subscription })
 }
 
 export default {
   userRegistration: controllersWrapper(userRegistration),
   userLogin: controllersWrapper(userLogin),
+  userLogout: controllersWrapper(userLogout),
+  getCurrent: controllersWrapper(getCurrent),
 }

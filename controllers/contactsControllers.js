@@ -60,7 +60,7 @@ const updateStatusContact = async (req, res) => {
     throw HttpError(400, "The body must have a field - favorite")
   }
 
-  const result = await contactsServices.updateFavorite(id, favorite)
+  const result = await contactsServices.updateFavorite(id, { favorite })
 
   if (!result) {
     throw HttpError(404, "Not found")
@@ -71,6 +71,7 @@ const updateStatusContact = async (req, res) => {
 
 const deleteContact = async (req, res) => {
   const { id } = req.params
+
   const { _id: owner } = req.user
   const result = await contactsServices.removeContact({ _id: id, owner })
 

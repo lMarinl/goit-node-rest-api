@@ -34,4 +34,5 @@ contactsRouter.patch(
   validateBody(schemas.favoriteSchema),
   contactsControllers.updateStatusContact
 )
+
 export default contactsRouter

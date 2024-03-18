@@ -12,8 +12,9 @@ const addContact = (data) => Contact.create(data)
 const updateContactById = (filter, data) =>
   Contact.findOneAndUpdate(filter, data, { new: true })
 
-const updateFavorite = (_id, data) =>
+  const updateFavorite = (_id, data) =>
   Contact.findByIdAndUpdate(_id, data, { new: true })
+
 
 export default {
   listContacts,

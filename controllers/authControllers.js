@@ -14,8 +14,10 @@ const userRegistration = async (req, res) => {
   const newUser = await services.registration(req.body)
 
   res.status(201).json({
-    email: newUser.email,
-    subscription: "starter",
+    user: {
+      email: newUser.email,
+      subscription: "starter",
+    },
   })
 }
 
@@ -44,7 +46,13 @@ const userLogin = async (req, res) => {
 
   await services.updateUser({ _id: id }, { token })
 
-  res.json({ token })
+  res.json({
+    token: token,
+    user: {
+      email: email,
+      subscription: "starter",
+    },
+  })
 }
 
 const userLogout = async (req, res) => {

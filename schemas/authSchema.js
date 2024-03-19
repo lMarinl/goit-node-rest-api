@@ -3,7 +3,7 @@ import Joi from "joi"
 import { emailRegexp } from "../constants/userConstants.js"
 
 const userSignupSchema = Joi.object({
-  userName: Joi.string().required(),
+  userName: Joi.string(),
   email: Joi.string().pattern(emailRegexp).required(),
   password: Joi.string().min(3).required(),
 })

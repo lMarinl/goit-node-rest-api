@@ -55,12 +55,16 @@ const updateContact = async (req, res) => {
 const updateStatusContact = async (req, res) => {
   const { id } = req.params
   const { favorite } = req.body
+  const { _id: owner } = req.user
 
   if (!req.body || Object.keys(req.body).length === 0) {
     throw HttpError(400, "The body must have a field - favorite")
   }
 
-  const result = await contactsServices.updateFavorite(id, { favorite })
+  const result = await contactsServices.updateFavorite(
+    { _id: id, owner },
+    { favorite }
+  )
 
   if (!result) {
     throw HttpError(404, "Not found")

@@ -2,14 +2,22 @@ import contactsServices from "../services/contactsServices.js"
 import HttpError from "../helpers/HttpError.js"
 import controllersWrapper from "../decorators/controllersWrapper.js"
 
-const getAllContacts = async (_, res) => {
-  const allContacts = await contactsServices.listContacts()
+const getAllContacts = async (req, res) => {
+  const { _id: owner } = req.user
+  const { page = 1, limit = 10 } = req.query
+  const skip = (page - 1) * limit
+  const allContacts = await contactsServices.listContacts(
+    { owner },
+    { skip, limit }
+  )
+
   res.json(allContacts)
 }
 
 const getOneContact = async (req, res) => {
   const { id } = req.params
-  const contactById = await contactsServices.getContactById(id)
+  const { _id: owner } = req.user
+  const contactById = await contactsServices.getContactById({ _id: id, owner })
 
   if (!contactById) {
     throw HttpError(404, `Contact with id=${id} not found`)
@@ -19,18 +27,24 @@ const getOneContact = async (req, res) => {
 }
 
 const createContact = async (req, res) => {
-  const newContact = await contactsServices.addContact(req.body)
+  const { _id: owner } = req.user
+  const newContact = await contactsServices.addContact({ ...req.body, owner })
+
   res.status(201).json(newContact)
 }
 
 const updateContact = async (req, res) => {
   const { id } = req.params
+  const { _id: owner } = req.user
 
   if (!req.body || Object.keys(req.body).length === 0) {
     throw HttpError(400, "Body must have at least one field")
   }
 
-  const result = await contactsServices.updateContactById(id, req.body)
+  const result = await contactsServices.updateContactById(
+    { _id: id, owner },
+    req.body
+  )
 
   if (!result) {
     throw HttpError(404, `Contact with id=${id} not found`)
@@ -41,12 +55,16 @@ const updateContact = async (req, res) => {
 const updateStatusContact = async (req, res) => {
   const { id } = req.params
   const { favorite } = req.body
+  const { _id: owner } = req.user
 
   if (!req.body || Object.keys(req.body).length === 0) {
     throw HttpError(400, "The body must have a field - favorite")
   }
 
-  const result = await contactsServices.updateFavorite(id, favorite)
+  const result = await contactsServices.updateFavorite(
+    { _id: id, owner },
+    { favorite }
+  )
 
   if (!result) {
     throw HttpError(404, "Not found")
@@ -57,7 +75,9 @@ const updateStatusContact = async (req, res) => {
 
 const deleteContact = async (req, res) => {
   const { id } = req.params
-  const result = await contactsServices.removeContact(id)
+
+  const { _id: owner } = req.user
+  const result = await contactsServices.removeContact({ _id: id, owner })
 
   if (!result) {
     throw HttpError(404, `Contact with id=${id} not found`)

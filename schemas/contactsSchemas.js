@@ -17,6 +17,7 @@ const updateContactSchema = Joi.object({
 const favoriteSchema = Joi.object({
   favorite: Joi.boolean().required(),
 })
+
 export default {
   createContactSchema,
   updateContactSchema,
